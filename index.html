@@ -7,13 +7,13 @@
   <style>
     /* CSS Variables for Theme Management */
     :root {
-      --primary-color: #52e152;
-      --secondary-color: #8257e5;
+      --primary-color: #4CAF50;
+      --secondary-color: #8E44AD;
       --background-gradient: linear-gradient(135deg, #1a1a1a, #333333);
-      --button-hover-color: #4cd74c;
-      --warning-color: #ffcc00;
-      --success-color: #00ffcc;
-      --error-color: #ff3333;
+      --button-hover-color: #45a049;
+      --warning-color: #f39c12;
+      --success-color: #2ecc71;
+      --error-color: #e74c3c;
       --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       --transition-speed: 0.3s;
     }
@@ -32,27 +32,15 @@
       box-sizing: border-box;
       overflow-x: hidden;
       position: relative;
+      background-size: 400% 400%;
+      animation: gradientAnimation 15s ease infinite;
     }
 
-    /* Animated Particle Background */
-    body::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: transparent;
-      pointer-events: none;
-      background-image: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
-      background-size: 20px 20px;
-      animation: moveBackground 20s linear infinite;
-      opacity: 0.2;
-    }
-
-    @keyframes moveBackground {
-      from { background-position: 0 0; }
-      to { background-position: 100px 100px; }
+    /* Gradient Animation */
+    @keyframes gradientAnimation {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
     /* Header Styling */
@@ -64,12 +52,12 @@
       animation: fadeInDown 1s ease forwards;
       opacity: 0;
       color: #ffffff;
-      text-shadow: 0 0 15px rgba(82, 225, 82, 0.7);
+      text-shadow: 0 0 15px rgba(76, 175, 80, 0.7);
     }
 
     #header strong {
       color: var(--primary-color);
-      text-shadow: 0 0 20px rgba(82, 225, 82, 0.7);
+      text-shadow: 0 0 20px rgba(76, 175, 80, 0.7);
     }
 
     /* Container Styling */
@@ -118,7 +106,7 @@
     #submission-container input[type="text"]:focus,
     #submission-container input[type="email"]:focus {
       border-color: var(--primary-color);
-      box-shadow: 0 0 10px rgba(82, 225, 82, 0.5);
+      box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
       outline: none;
     }
 
@@ -280,7 +268,7 @@
       font-size: 2em;
       animation: fadeIn 1s ease forwards 5s;
       color: var(--primary-color);
-      text-shadow: 0 0 10px rgba(82, 225, 82, 0.7);
+      text-shadow: 0 0 10px rgba(76, 175, 80, 0.7);
     }
 
     #analysisResult p, #analysisResult ul {
@@ -288,10 +276,9 @@
       animation: fadeIn 1s ease forwards;
     }
 
-    #analysisResult p:nth-child(6),
-    #analysisResult ul:nth-child(9),
-    #analysisResult ul:nth-child(12),
-    #analysisResult p.last-message {
+    #analysisResult p:last-child,
+    #analysisResult ul:nth-child(5),
+    #analysisResult ul:nth-child(8) {
       animation-delay: 6s;
     }
 
@@ -314,12 +301,8 @@
       animation-delay: 7.5s;
     }
 
-    #analysisResult ul li:nth-child(4) {
-      animation-delay: 8s;
-    }
-
     #analysisResult p.last-message {
-      animation-delay: 8.5s;
+      animation-delay: 8s;
       font-style: italic;
       color: var(--primary-color);
     }
@@ -384,18 +367,6 @@
       }
     }
 
-    @keyframes pulse {
-      0% {
-        box-shadow: 0 0 0 0 rgba(130, 87, 229, 0.7);
-      }
-      70% {
-        box-shadow: 0 0 0 10px rgba(130, 87, 229, 0);
-      }
-      100% {
-        box-shadow: 0 0 0 0 rgba(130, 87, 229, 0);
-      }
-    }
-
     @keyframes scaleIn {
       from {
         opacity: 0;
@@ -404,6 +375,18 @@
       to {
         opacity: 1;
         transform: scale(1);
+      }
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(142, 68, 173, 0.7);
+      }
+      70% {
+        box-shadow: 0 0 0 10px rgba(142, 68, 173, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(142, 68, 173, 0);
       }
     }
 
@@ -460,38 +443,15 @@
     <!-- Log Area -->
     <div class="log" id="logArea"></div>
 
-    <!-- Mock Analysis Data -->
+    <!-- Analysis Result (Hidden Initially) -->
     <div id="analysisResult">
       <h2>Analysis Report</h2>
-      <p><strong>Token Name:</strong> PumpFun Token</p>
-      <p><strong>Symbol:</strong> PFT</p>
-      <p><strong>Total Supply:</strong> 1,000,000,000 PFT</p>
-      <p><strong>Decimals:</strong> 18</p>
-      <p><strong>Mint Authority:</strong> Public</p>
-      <p><strong>Freeze Authority:</strong> None</p>
-      <p><strong>Holders:</strong> 1,200</p>
-      <h3>Market Data:</h3>
-      <p><strong>Current Price:</strong> $0.10</p>
-      <p><strong>Market Cap:</strong> $50,000,000</p>
-      <p><strong>24h Volume:</strong> $5,000,000</p>
-      <p><strong>24h Price Change:</strong> +5%</p>
-      <h3>Analysis:</h3>
-      <ul>
-        <li>The token demonstrates a steady market cap with consistent trading volumes.</li>
-        <li>The positive 24h price change indicates a bullish trend.</li>
-        <li>With over 1,000 holders, the token enjoys strong community support.</li>
-      </ul>
-      <h3>Recommendations:</h3>
-      <ul>
-        <li>Continue engaging with the community to maintain and grow the holder base.</li>
-        <li>Monitor liquidity pools to ensure price stability.</li>
-        <li>Enhance marketing efforts to increase token visibility.</li>
-      </ul>
+      <!-- Since it's fake, no actual analysis data is displayed -->
       <p class="last-message"><em>You will receive your analysis on your provided email shortly.</em></p>
     </div>
   </div>
 
-  <!-- Footer -->
+  <!-- Footer with Disclaimer -->
   <div id="footer">
     Enter a PumpFun token contract address to request an analysis. Receive a detailed report via email.
     <br/>
@@ -504,7 +464,7 @@
   <!-- JavaScript Functionality -->
   <script>
     /*******************************************
-     * PumpInsights - PumpFun Token Analysis (Enhanced Fake)
+     * PumpInsights - PumpFun Token Analysis (Innovative Fake)
      *******************************************/
     const phantomButton = document.getElementById("phantom-button");
     const submissionContainer = document.getElementById("submission-container");
@@ -580,27 +540,31 @@
       logArea.innerHTML = "";
       analysisResult.style.display = "none";
 
-      logMessage(`Connecting your wallet (${userWalletAddress}) to PumpInsights...`, "info");
+      logMessage(`Initiating analysis for token: ${tokenAddress}`, "info");
       loadingIndicator.style.display = "block";
 
       try {
         // Simulate adding to queue
         logMessage("Your analysis request has been received and added to the queue.", "info");
-        await delay(4000); // 4 seconds delay
+        await delay(3000); // 3 seconds delay
 
         // Simulate high usage alert
         logMessage("We are currently experiencing high usage. Please wait for your turn.", "warning");
-        await delay(3000); // 3 seconds delay
+        await delay(4000); // 4 seconds delay
 
         // Simulate analysis processing
         logMessage("Processing your token analysis...", "info");
-        await delay(7000); // 7 seconds delay
+        await delay(5000); // 5 seconds delay
 
-        // Display mock analysis data
-        analysisResult.style.display = "block";
-
-        // Final message
+        // Final message without displaying analysis
         logMessage("Analysis complete! A detailed report has been sent to your email shortly.", "success");
+
+        // Display analysis result section with a confirmation message
+        analysisResult.innerHTML = `
+          <h2>Analysis Report</h2>
+          <p class="last-message"><em>You will receive your analysis on <strong>${userEmail}</strong> shortly.</em></p>
+        `;
+        analysisResult.style.display = "block";
       } catch (error) {
         logMessage(`Error: ${error.message}`, "error");
         console.error(error);
