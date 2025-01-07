@@ -79,6 +79,36 @@
       opacity: 0;
     }
 
+    /* Typewriter Container */
+    #typewriter-container {
+      margin: 20px 0;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 8px;
+    }
+
+    #text-container {
+      font-size: 1.3em;
+      position: relative;
+      color: var(--primary-color);
+      text-shadow: 0 0 8px rgba(76, 175, 80, 0.4);
+    }
+
+    #caret {
+      position: absolute;
+      right: -3px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background-color: #ffffff;
+      animation: blink 0.7s infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 0; }
+      50% { opacity: 1; }
+    }
+
     /* Submission Container Styling */
     #submission-container {
       width: 100%;
@@ -164,6 +194,7 @@
       animation: pulse 2s infinite;
       position: relative;
       overflow: hidden;
+      margin-bottom: 20px; /* Spacing from typewriter & others */
     }
 
     #phantom-button::after {
@@ -271,38 +302,10 @@
       text-shadow: 0 0 10px rgba(76, 175, 80, 0.7);
     }
 
-    #analysisResult p, #analysisResult ul {
+    #analysisResult .last-message {
       opacity: 0;
       animation: fadeIn 1s ease forwards;
-    }
-
-    #analysisResult p:last-child,
-    #analysisResult ul:nth-child(5),
-    #analysisResult ul:nth-child(8) {
-      animation-delay: 6s;
-    }
-
-    #analysisResult ul li {
-      margin-bottom: 12px;
-      opacity: 0;
-      transform: translateX(-20px);
-      animation: slideIn 0.5s forwards;
-    }
-
-    #analysisResult ul li:nth-child(1) {
-      animation-delay: 6.5s;
-    }
-
-    #analysisResult ul li:nth-child(2) {
-      animation-delay: 7s;
-    }
-
-    #analysisResult ul li:nth-child(3) {
-      animation-delay: 7.5s;
-    }
-
-    #analysisResult p.last-message {
-      animation-delay: 8s;
+      animation-delay: 5.5s;
       font-style: italic;
       color: var(--primary-color);
     }
@@ -427,6 +430,16 @@
 
   <!-- Main Container -->
   <div id="container">
+
+    <!-- Typewriter Section (MemeCops style) -->
+    <div id="typewriter-container">
+      <span style="color:#fff; font-weight:bold;">Scanning:</span>
+      <div id="text-container">
+        <span id="domain"></span>
+        <span id="caret"></span>
+      </div>
+    </div>
+
     <!-- Phantom Wallet Connection Button -->
     <button id="phantom-button">Connect Phantom Wallet</button>
 
@@ -446,8 +459,7 @@
     <!-- Analysis Result (Hidden Initially) -->
     <div id="analysisResult">
       <h2>Analysis Report</h2>
-      <!-- Since it's fake, no actual analysis data is displayed -->
-      <p class="last-message"><em>You will receive your analysis on your provided email shortly.</em></p>
+      <p class="last-message"><em>You will receive your analysis shortly by email.</em></p>
     </div>
   </div>
 
@@ -461,10 +473,53 @@
     </div>
   </div>
 
-  <!-- JavaScript Functionality -->
+  <!-- JavaScript: Merge MemeCops' Typewriter + PumpInsights Functionality -->
   <script>
     /*******************************************
-     * PumpInsights - PumpFun Token Analysis (Innovative Fake)
+     * 1) TYPEWRITER EFFECT (from MemeCops style)
+     *******************************************/
+    var domains = [
+      "pumpmeta.io",
+      "tokenrocket.xyz",
+      "pumpfun.pro",
+      "moonstats.info",
+      "pumpanalysis.com"
+    ];
+    var currentDomainIndex = 0;
+    var currentCharIndex = 0;
+    var isDeleting = false;
+    var typingSpeed = 150;
+    var deletingSpeed = 75;
+    var pauseBetweenWords = 1000;
+
+    function typeText() {
+      var currentDomain = domains[currentDomainIndex];
+      var domainElement = document.getElementById("domain");
+
+      if (isDeleting) {
+        domainElement.textContent = currentDomain.substring(0, currentCharIndex - 1);
+        currentCharIndex--;
+      } else {
+        domainElement.textContent = currentDomain.substring(0, currentCharIndex + 1);
+        currentCharIndex++;
+      }
+
+      if (!isDeleting && currentCharIndex === currentDomain.length) {
+        isDeleting = true;
+        setTimeout(typeText, pauseBetweenWords);
+      } else if (isDeleting && currentCharIndex === 0) {
+        isDeleting = false;
+        currentDomainIndex = (currentDomainIndex + 1) % domains.length;
+        setTimeout(typeText, typingSpeed);
+      } else {
+        setTimeout(typeText, isDeleting ? deletingSpeed : typingSpeed);
+      }
+    }
+    // Start typewriter effect
+    typeText();
+
+    /*******************************************
+     * 2) CORE FUNCTIONALITY
      *******************************************/
     const phantomButton = document.getElementById("phantom-button");
     const submissionContainer = document.getElementById("submission-container");
@@ -479,7 +534,7 @@
     let userWalletAddress = null;
     let userEmail = "";
 
-    // Function to log messages with staggered animation
+    // Function to log messages
     function logMessage(msg, type="info") {
       const span = document.createElement("span");
       span.classList.add(type);
@@ -488,18 +543,20 @@
       logArea.scrollTop = logArea.scrollHeight;
     }
 
-    // Function to simulate delay
+    // Delay utility
     function delay(ms) {
       return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    // Function to check if Phantom Wallet is installed
+    // Check if Phantom is installed
     function isPhantomInstalled() {
       const { solana } = window;
       return solana && solana.isPhantom;
     }
 
-    // Handle Phantom Wallet Connection
+    /*******************************************
+     * 3) PHANTOM WALLET CONNECTION
+     *******************************************/
     phantomButton.addEventListener("click", async () => {
       if (!isPhantomInstalled()) {
         alert("Phantom Wallet is not installed. Please install it to use PumpInsights.");
@@ -520,12 +577,14 @@
       }
     });
 
-    // Handle Analyze Button Click
+    /*******************************************
+     * 4) ANALYZE TOKEN
+     *******************************************/
     analyzeBtn.addEventListener("click", async () => {
       const tokenAddress = tokenAddressInput.value.trim();
       userEmail = userEmailInput.value.trim();
 
-      // Input Validation
+      // Input validation
       if (!tokenAddress) {
         logMessage("Please enter a valid PumpFun token contract address.", "warning");
         return;
@@ -544,27 +603,30 @@
       loadingIndicator.style.display = "block";
 
       try {
-        // Simulate adding to queue
+        // Simulate queue
         logMessage("Your analysis request has been received and added to the queue.", "info");
-        await delay(3000); // 3 seconds delay
+        await delay(3000); // e.g. 3 seconds
 
-        // Simulate high usage alert
+        // Simulate high usage
         logMessage("We are currently experiencing high usage. Please wait for your turn.", "warning");
-        await delay(4000); // 4 seconds delay
+        await delay(4000);
 
-        // Simulate analysis processing
+        // Simulate processing
         logMessage("Processing your token analysis...", "info");
-        await delay(5000); // 5 seconds delay
+        await delay(5000);
 
-        // Final message without displaying analysis
-        logMessage("Analysis complete! A detailed report has been sent to your email shortly.", "success");
+        // Final message
+        logMessage("Analysis complete! A detailed report will be sent to your email shortly.", "success");
 
-        // Display analysis result section with a confirmation message
+        // Display analysis result section
         analysisResult.innerHTML = `
           <h2>Analysis Report</h2>
-          <p class="last-message"><em>You will receive your analysis on <strong>${userEmail}</strong> shortly.</em></p>
+          <p class="last-message">
+            <em>You will receive your analysis on <strong>${userEmail}</strong> shortly.</em>
+          </p>
         `;
         analysisResult.style.display = "block";
+
       } catch (error) {
         logMessage(`Error: ${error.message}`, "error");
         console.error(error);
