@@ -195,7 +195,7 @@
     #analysisResult p:nth-child(4),
     #analysisResult ul:nth-child(7),
     #analysisResult ul:nth-child(10),
-    #analysisResult p:last-child {
+    #analysisResult p.last-message {
       animation-delay: 6s;
     }
 
@@ -222,7 +222,7 @@
       animation-delay: 8s;
     }
 
-    #analysisResult p:last-child {
+    #analysisResult p.last-message {
       animation-delay: 8.5s;
     }
 
@@ -308,6 +308,21 @@
         transform: scale(1);
       }
     }
+
+    /* Responsive Design */
+    @media (max-width: 600px) {
+      body {
+        padding: 16px;
+      }
+      #header {
+        font-size: 1.8em;
+      }
+      #submission-container button,
+      #phantom-button {
+        width: 100%;
+        align-self: center;
+      }
+    }
   </style>
 </head>
 <body>
@@ -340,7 +355,9 @@
       <p><strong>Token Name:</strong> PumpFun Token</p>
       <p><strong>Symbol:</strong> PFT</p>
       <p><strong>Total Supply:</strong> 1,000,000,000 PFT</p>
-      <p><strong>Circulating Supply:</strong> 500,000,000 PFT</p>
+      <p><strong>Decimals:</strong> 18</p>
+      <p><strong>Mint Authority:</strong> Public</p>
+      <p><strong>Freeze Authority:</strong> None</p>
       <p><strong>Holders:</strong> 1,200</p>
       <h3>Market Data:</h3>
       <p><strong>Current Price:</strong> $0.10</p>
@@ -355,11 +372,11 @@
       </ul>
       <h3>Recommendations:</h3>
       <ul>
-        <li>Continue engaging with the community to maintain and grow holder base.</li>
+        <li>Continue engaging with the community to maintain and grow the holder base.</li>
         <li>Monitor liquidity pools to ensure price stability.</li>
         <li>Enhance marketing efforts to increase token visibility.</li>
       </ul>
-      <p><em>Analysis complete! A detailed report has been sent to your email shortly.</em></p>
+      <p class="last-message"><em>You will receive your analysis on your provided email shortly.</em></p>
     </div>
   </div>
 
@@ -386,6 +403,7 @@
 
     let connected = false;
     let userWalletAddress = null;
+    let userEmail = "";
 
     // Function to log messages with staggered animation
     function logMessage(msg, type="info") {
@@ -431,7 +449,7 @@
     // Handle Analyze Button Click
     analyzeBtn.addEventListener("click", async () => {
       const tokenAddress = tokenAddressInput.value.trim();
-      const userEmail = userEmailInput.value.trim();
+      userEmail = userEmailInput.value.trim();
 
       // Input Validation
       if (!tokenAddress) {
@@ -456,15 +474,13 @@
         logMessage("Your analysis request has been received and added to the queue.", "info");
         await delay(4000); // 4 seconds delay
 
-        // Simulate position in queue
-        logMessage("Checking your position in the queue...", "info");
+        // Simulate high usage alert
+        logMessage("We are currently experiencing high usage. Please wait for your turn.", "warning");
         await delay(3000); // 3 seconds delay
-        logMessage("Your position in the queue: 3/10", "info");
-        await delay(5000); // 5 seconds delay
 
         // Simulate analysis processing
         logMessage("Processing your token analysis...", "info");
-        await delay(10000); // 10 seconds delay
+        await delay(7000); // 7 seconds delay
 
         // Display mock analysis data
         analysisResult.style.display = "block";
