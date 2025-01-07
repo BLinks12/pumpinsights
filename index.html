@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PumpInsights - PumpFun Token Analysis</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: #ffffff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0;
+      padding: 32px;
+      height: 100vh;
+      box-sizing: border-box;
+    }
+    #header {
+      text-align: center;
+      font-size: 1.5em;
+      margin-bottom: 20px;
+    }
+    #container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 600px;
+    }
+    #submission-container {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    #submission-container input[type="text"],
+    #submission-container input[type="email"] {
+      width: 100%;
+      padding: 10px;
+      border-radius: 4px;
+      border: 1px solid #444;
+      font-size: 1em;
+      background-color: #1e1e1e;
+      color: #fff;
+    }
+    #submission-container button {
+      padding: 10px 20px;
+      background-color: #52e152;
+      border: none;
+      color: #000;
+      font-size: 1em;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+    #submission-container button:hover {
+      background-color: #4cd74c;
+    }
+    .log {
+      width: 100%;
+      background-color: #111;
+      font-family: monospace;
+      font-size: 0.85em;
+      padding: 10px;
+      border: 1px solid #444;
+      border-radius: 6px;
+      margin-top: 20px;
+      overflow-y: auto;
+      max-height: 300px;
+      white-space: pre-wrap;
+    }
+    .log span {
+      display: block;
+      margin-bottom: 4px;
+    }
+    .log .info {
+      color: #0f0;
+    }
+    .log .warning {
+      color: #ff0;
+    }
+    .log .error {
+      color: #f00;
+    }
+    .log .success {
+      color: #0ff;
+    }
+    #footer {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 0.8em;
+      color: #aaa;
+    }
+    #footer a {
+      color: #52e152;
+      text-decoration: none;
+    }
+    .loading-indicator {
+      margin-top: 10px;
+      color: #52e152;
+      font-size: 1em;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="header">
+    <strong>PumpInsights</strong> - PumpFun Token Analysis
+  </div>
+
+  <div id="container">
+    <!-- Token Submission Section -->
+    <div id="submission-container">
+      <input type="text" id="tokenAddress" placeholder="Enter PumpFun Token Contract Address" />
+      <input type="email" id="userEmail" placeholder="Enter Your Email Address" />
+      <button id="analyzeBtn">Analyze Token</button>
+    </div>
+    <div class="loading-indicator" id="loadingIndicator">Analyzing token, please wait...</div>
+
+    <!-- Log Area -->
+    <div class="log" id="logArea"></div>
+  </div>
+
+  <div id="footer">
+    Enter a PumpFun token contract address to request an analysis. Receive a detailed report via email.
+    <br/>
+    Follow us on <a href="https://twitter.com/PumpInsights" target="_blank">Twitter</a> for updates.
+  </div>
+
+  <!-- Include EmailJS SDK -->
+  <script src="https://cdn.emailjs.com/sdk/3.2/email.min.js"></script>
+  <script>
+    (function(){
+      emailjs.init("YOUR_EMAILJS_USER_ID"); // Replace with your EmailJS user ID
+    })();
+  </script>
+
+  <script>
+    /*******************************************
+     * PumpInsights - PumpFun Token Analysis
+     *******************************************/
+    const analyzeBtn = document.getElementById("analyzeBtn");
+    const tokenAddressInput = document.getElementById("tokenAddress");
+    const userEmailInput = document.getElementById("userEmail");
+    const logArea = document.getElementById("logArea");
+    const loadingIndicator = document.getElementById("loadingIndicator");
+
+    function logMessage(msg, type="info") {
+      const span = document.createElement("span");
+      span.classList.add(type);
+      span.innerText = msg;
+      logArea.appendChild(span);
+      logArea.scrollTop = logArea.scrollHeight;
+    }
+
+    analyzeBtn.addEventListener("click", async () => {
+      const tokenAddress = tokenAddressInput.value.trim();
+      const userEmail = userEmailInput.value.trim();
+
+      if (!tokenAddress) {
+        logMessage("Please enter a valid PumpFun token contract address.", "warning");
+        return;
+      }
+
+      if (!userEmail) {
+        logMessage("Please enter a valid email address to receive the report.", "warning");
+        return;
+      }
+
+      // Clear previous logs
+      logArea.innerHTML = "";
+      logMessage(`Starting analysis for token: ${tokenAddress} ...`, "info");
+      loadingIndicator.style.display = "block";
+
+      try {
+        // Step 1: Get Token Information from Etherscan
+        logMessage("Fetching token information from Etherscan...", "info");
+        const tokenInfo = await getTokenData(tokenAddress);
+
+        logMessage("Token information retrieved successfully.", "success");
+
+        // Step 2: Get Market Data from CoinGecko
+        logMessage("Fetching market data from CoinGecko...", "info");
+        const marketData = await getMarketData(tokenAddress);
+
+        logMessage("Market data retrieved successfully.", "success");
+
+        // Step 3: Prepare the Report
+        logMessage("Compiling the analysis report...", "info");
+        const report = compileReport(tokenInfo, marketData);
+
+        // Step 4: Send Email via EmailJS
+        logMessage("Sending the report to your email...", "info");
+        await sendEmail(userEmail, tokenInfo, marketData, report);
+
+        logMessage("Analysis complete! A detailed report has been sent to your email.", "success');
+      } catch (error) {
+        logMessage(`Error: ${error.message}`, "error");
+      } finally {
+        loadingIndicator.style.display = "none";
+      }
+    });
+
+    async function getTokenData(tokenAddress) {
+      const ETHERSCAN_API_KEY = "YOUR_ETHERSCAN_API_KEY"; // Replace with your Etherscan API Key
+      const etherscanUrl = `https://api.etherscan.io/api?module=token&action=tokeninfo&contractaddress=${tokenAddress}&apikey=${ETHERSCAN_API_KEY}`;
+
+      const response = await fetch(etherscanUrl);
+      const data = await response.json();
+
+      if (data.status !== "1") {
+        throw new Error(data.result || "Failed to fetch token data.");
+      }
+
+      return data.result[0];
+    }
+
+    async function getMarketData(tokenAddress) {
+      // CoinGecko requires the platform and contract address to fetch data
+      const coingeckoUrl = `https://api.coingecko.com/api/v3/coins/ethereum/contract/${tokenAddress}`;
+
+      const response = await fetch(coingeckoUrl);
+      if (!response.ok) {
+        throw new Error("Failed to fetch market data from CoinGecko.");
+      }
+      const data = await response.json();
+      return data;
+    }
+
+    function compileReport(tokenInfo, marketData) {
+      const tokenName = tokenInfo.name;
+      const tokenSymbol = tokenInfo.symbol;
+      const totalSupply = tokenInfo.totalSupply;
+      const holders = tokenInfo.holders;
+
+      const price = marketData.market_data.current_price.usd;
+      const marketCap = marketData.market_data.market_cap.usd;
+      const volume = marketData.market_data.total_volume.usd;
+      const priceChange24h = marketData.market_data.price_change_percentage_24h;
+      const circulatingSupply = marketData.market_data.circulating_supply;
+
+      const report = `
+PumpInsights - PumpFun Token Analysis Report
+
+Token Information:
+- Name: ${tokenName}
+- Symbol: ${tokenSymbol}
+- Total Supply: ${totalSupply}
+- Circulating Supply: ${circulatingSupply}
+- Holders: ${holders}
+
+Market Data:
+- Current Price: $${price}
+- Market Cap: $${marketCap}
+- 24h Volume: $${volume}
+- 24h Price Change: ${priceChange24h}%
+
+Analysis:
+- The token shows a healthy market cap and trading volume.
+- The 24h price change indicates ${priceChange24h > 0 ? 'a bullish' : 'a bearish'} trend.
+- With ${holders} holders, the token has a ${holders > 1000 ? 'strong' : 'moderate'} community support.
+
+Recommendations:
+- Monitor price volatility closely.
+- Engage more with the community to strengthen the holder base.
+- Ensure liquidity pools are adequately funded to prevent price manipulation.
+      `;
+      return report;
+    }
+
+    async function sendEmail(userEmail, tokenInfo, marketData, report) {
+      const templateParams = {
+        to_email: userEmail,
+        token_name: tokenInfo.name,
+        token_symbol: tokenInfo.symbol,
+        token_address: tokenAddressInput.value.trim(),
+        report: report
+      };
+
+      // Replace 'YOUR_EMAILJS_SERVICE_ID', 'YOUR_EMAILJS_TEMPLATE_ID' with your EmailJS service and template IDs
+      const result = await emailjs.send('YOUR_EMAILJS_SERVICE_ID', 'YOUR_EMAILJS_TEMPLATE_ID', templateParams);
+      return result;
+    }
+  </script>
+</body>
+</html>
