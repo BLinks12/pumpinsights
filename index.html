@@ -2,269 +2,239 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <title>PumpInsights – PumpFun Token Analyzer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PumpXploit – PumpFun Token Recon</title>
 
-  <!-- Google Fonts -->
+  <!-- Monospace Hacker Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet" />
 
   <style>
     :root {
-      /* Brand palette */
-      --clr-bg-1: #0f0c29;
-      --clr-bg-2: #302b63;
-      --clr-bg-3: #24243e;
-      --clr-accent: #00e676;
-      --clr-text-primary: #ffffff;
-      --clr-text-secondary: #cfcfcf;
-      --radius: 0.75rem;
+      --clr-hacker: #00ff88;
+      --clr-bg: #000000;
+      --clr-pink: #ff006e;
     }
 
-    /* ===== GLOBAL RESET ===== */
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    /* ======= GLOBAL RESET ======= */
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
     body {
-      font-family: 'Poppins', sans-serif;
-      color: var(--clr-text-primary);
+      font-family: 'Fira Code', monospace;
+      background: var(--clr-bg);
+      color: var(--clr-hacker);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      background: linear-gradient(135deg, var(--clr-bg-1), var(--clr-bg-2), var(--clr-bg-3));
-      background-size: 400% 400%;
-      animation: gradientShift 18s ease infinite;
+      overflow-x: hidden;
     }
 
-    @keyframes gradientShift {
-      0% {
-        background-position: 0% 50%;
-      }
-      50% {
-        background-position: 100% 50%;
-      }
-      100% {
-        background-position: 0% 50%;
-      }
+    /* --- CRT Scanlines & Noise --- */
+    body::before, body::after {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    body::before {
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0) 0px,
+        rgba(0, 0, 0, 0) 1px,
+        rgba(0, 255, 136, 0.04) 1px,
+        rgba(0, 255, 136, 0.04) 2px
+      );
+    }
+    body::after {
+      background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAIAAADTED8xAAAAA3NCSVQICAjb4U/gAAAAFElEQVR4nO3BMQEAAADCIPunNJ8PBwAAAP4BeYAAAVaI
+') repeat;
+      mix-blend-mode: overlay;
+      opacity: 0.08;
+      animation: noise 0.4s steps(2) infinite;
+    }
+    @keyframes noise {
+      0% { transform: translate(0,0); }
+      10% { transform: translate(-3%,-3%); }
+      20% { transform: translate(3%, -3%); }
+      30% { transform: translate(-3%, 3%); }
+      40% { transform: translate(3%,3%); }
+      50% { transform: translate(-1%,2%); }
+      60% { transform: translate(-3%,1%); }
+      70% { transform: translate(2%,1%); }
+      80% { transform: translate(-1%,-1%); }
+      90% { transform: translate(2%,3%); }
+      100% { transform: translate(0,0); }
     }
 
-    /* ===== LAYOUT ===== */
-    header {
-      text-align: center;
-      margin-top: 3rem;
-      margin-bottom: 1.5rem;
-      padding: 0 1.25rem;
+    /* ======= HEADER ======= */
+    header { margin-top: 3rem; text-align: center; }
+
+    h1 {
+      font-size: clamp(2.25rem, 6vw, 4rem);
+      letter-spacing: 0.08em;
+      position: relative;
     }
 
-    header h1 {
-      font-size: clamp(2rem, 5vw, 3rem);
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      color: var(--clr-accent);
-      text-shadow: 0 0 12px rgba(0, 230, 118, 0.5);
+    /* Glitch effect */
+    h1::before,
+    h1::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    h1::before {
+      left: 2px;
+      text-shadow: -2px 0 var(--clr-pink);
+      animation: glitch 2s infinite linear alternate-reverse;
+    }
+    h1::after {
+      left: -2px;
+      text-shadow: -2px 0 #00bfff;
+      animation: glitch 3s infinite linear alternate-reverse;
+    }
+    @keyframes glitch {
+      0% { clip-path: inset(0 0 85% 0); }
+      10% { clip-path: inset(0 0 30% 0); }
+      20% { clip-path: inset(50% 0 20% 0); }
+      30% { clip-path: inset(10% 0 50% 0); }
+      40% { clip-path: inset(40% 0 40% 0); }
+      50% { clip-path: inset(0 0 85% 0); }
+      60% { clip-path: inset(0 0 30% 0); }
+      70% { clip-path: inset(50% 0 20% 0); }
+      80% { clip-path: inset(10% 0 50% 0); }
+      90% { clip-path: inset(40% 0 40% 0); }
+      100% { clip-path: inset(0 0 85% 0); }
     }
 
     header p {
-      font-size: clamp(0.875rem, 2vw, 1.125rem);
-      color: var(--clr-text-secondary);
+      font-size: 0.95rem;
+      color: #7affb2;
+      text-shadow: 0 0 5px rgba(0, 255, 136, 0.75);
       margin-top: 0.5rem;
     }
 
-    /* Typewriter */
+    /* ======= TYPEWRITER ======= */
     #typewriter-container {
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      font-size: 1.125rem;
-      margin-bottom: 2rem;
+      margin: 2rem 0;
       user-select: none;
+      font-size: 1.1rem;
     }
-
-    #typewriter-container span {
-      color: var(--clr-accent);
-      font-weight: 600;
-    }
-
+    #typewriter-container span { font-weight: 700; }
     #caret {
       display: inline-block;
       width: 2px;
       height: 1.2em;
-      background: var(--clr-text-primary);
+      background: var(--clr-hacker);
       animation: blink 1s steps(2, start) infinite;
     }
+    @keyframes blink { 50% { opacity: 0; } }
 
-    @keyframes blink {
-      0%,
-      100% {
-        opacity: 1;
-      }
-      50% {
-        opacity: 0;
-      }
-    }
-
-    /* Card */
-    .card {
-      width: 92%;
-      max-width: 640px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(12px) saturate(140%);
-      border-radius: var(--radius);
+    /* ======= TERMINAL CARD ======= */
+    .terminal {
+      width: 90%;
+      max-width: 720px;
+      background: #000;
+      border: 2px solid var(--clr-hacker);
       padding: 2rem 1.5rem 2.5rem;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+      border-radius: 8px;
+      box-shadow: 0 0 25px 2px rgba(0, 255, 136, 0.35);
     }
 
     /* Buttons */
     .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      font-size: 1rem;
-      font-weight: 500;
+      background: transparent;
+      border: 1px solid var(--clr-hacker);
+      color: var(--clr-hacker);
+      font-weight: 600;
       padding: 0.75rem 1.5rem;
-      color: #000;
-      background-color: var(--clr-accent);
-      border: none;
-      border-radius: calc(var(--radius) / 1.5);
       cursor: pointer;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      transition: background 0.25s, color 0.25s, transform 0.25s;
     }
-
     .btn:hover {
-      transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 4px 16px rgba(0, 230, 118, 0.35);
+      background: var(--clr-hacker);
+      color: #000;
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 0 14px 2px rgba(0, 255, 136, 0.65);
     }
 
     /* Inputs */
     .field {
       width: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      border: 1px solid rgba(0, 255, 136, 0.35);
+      color: var(--clr-hacker);
       padding: 0.75rem 1rem;
-      border-radius: calc(var(--radius) / 1.5);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      background: rgba(0, 0, 0, 0.3);
-      color: var(--clr-text-primary);
-      font-size: 0.95rem;
-      transition: border 0.25s ease;
-    }
-
-    .field + .field {
       margin-top: 1rem;
+      font-size: 0.9rem;
     }
-
     .field:focus {
       outline: none;
-      border-color: var(--clr-accent);
+      border-color: var(--clr-pink);
     }
 
-    /* Interaction Containers */
-    #submission-container {
-      display: none;
-      margin-top: 2rem;
-    }
+    #submission-container { display: none; margin-top: 2rem; }
 
-    #loadingIndicator {
-      display: none;
-      margin-top: 1.25rem;
-      color: var(--clr-accent);
-      font-size: 0.925rem;
-    }
+    #loadingIndicator { display: none; margin-top: 1rem; font-size: 0.88rem; }
 
     /* Log */
     .log {
       margin-top: 2rem;
-      max-height: 180px;
+      max-height: 200px;
       overflow-y: auto;
-      background: rgba(0, 0, 0, 0.35);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: var(--radius);
+      background: rgba(0, 255, 136, 0.05);
+      border: 1px solid rgba(0, 255, 136, 0.3);
       padding: 1rem;
-      font-size: 0.875rem;
+      font-size: 0.85rem;
     }
-
-    .log span {
-      display: block;
-      margin-bottom: 0.5rem;
-    }
-
-    .info {
-      color: var(--clr-accent);
-    }
-
-    .warning {
-      color: #f8c72a;
-    }
-
-    .error {
-      color: #ff5252;
-    }
-
-    .success {
-      color: #4caf50;
-    }
+    .log span { display:block; margin-bottom:0.4rem; }
+    .info{color:var(--clr-hacker);} .warning{color:var(--clr-pink);} .error{color:#ff5555;} .success{color:#7affb2;}
 
     /* Footer */
-    footer {
-      margin-top: auto;
-      margin-bottom: 1rem;
-      text-align: center;
-      font-size: 0.875rem;
-      color: var(--clr-text-secondary);
-    }
-
-    footer a {
-      color: var(--clr-accent);
-      text-decoration: none;
-    }
-
-    footer a:hover {
-      text-decoration: underline;
-    }
+    footer { margin-top: auto; margin-bottom: 1rem; font-size: 0.8rem; color: #7affb2; text-align: center; }
+    footer a { color: var(--clr-hacker); text-decoration:none; }
+    footer a:hover{ text-decoration:underline; }
   </style>
 </head>
 <body>
-  <!-- ========= HEADER ========= -->
+  <!-- ======= HEADER ======= -->
   <header>
-    <h1>PumpInsights</h1>
-    <p>Your trusted PumpFun token analytics companion</p>
+    <h1 data-text="PumpXploit">PumpXploit</h1>
+    <p>Recon for your PumpFun tokens</p>
   </header>
 
-  <!-- ========= TYPEWRITER ========= -->
+  <!-- ======= TYPEWRITER ======= -->
   <div id="typewriter-container">
-    Checking:
-    <span id="pumpToken"></span><span id="caret"></span>
+    Reconnaissance: <span id="pumpToken"></span><span id="caret"></span>
   </div>
 
-  <!-- ========= CARD ========= -->
-  <section class="card">
-    <button id="phantom-button" class="btn">
-      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1l3 4h-6l3-4z"/><path d="M6.129 8l1.746-1.99L4.16 2.76 2.384 4.7l3.745 3.3zM17.871 8l1.746 1.99 3.715-3.25-1.776-1.94-3.685 3.2zM12 23l-3-4h6l-3 4z"/><path d="M1 12l4-3 3 3-3 3-4-3zM23 12l-4 3-3-3 3-3 4 3zM8 8h8v8H8V8z"/></svg>
-      Connect Phantom
-    </button>
+  <!-- ======= TERMINAL INTERFACE ======= -->
+  <section class="terminal">
+    <button id="phantom-button" class="btn">Connect Phantom</button>
 
     <div id="submission-container">
       <input type="text" id="tokenAddress" class="field" placeholder="PumpFun token address" />
       <input type="email" id="userEmail" class="field" placeholder="Your email address" />
-      <button id="analyzeBtn" class="btn" style="margin-top: 1.5rem; width: 100%;">Analyze Token</button>
+      <button id="analyzeBtn" class="btn" style="width:100%;margin-top:1.5rem;">Run Analysis</button>
     </div>
 
-    <div id="loadingIndicator">Analyzing token, please wait…</div>
+    <div id="loadingIndicator">▌█ scanning █▐ please wait…</div>
 
     <div class="log" id="logArea"></div>
   </section>
 
-  <!-- ========= FOOTER ========= -->
-  <footer>
-    © 2025 PumpInsights – <a href="https://pump.fun" target="_blank" rel="noopener">PumpFun</a>
-  </footer>
+  <!-- ======= FOOTER ======= -->
+  <footer>© 2025 PumpXploit – <a href="https://pump.fun" target="_blank" rel="noopener">PumpFun</a></footer>
 
   <script>
     /*******************************************
@@ -291,7 +261,7 @@
         currentChar++;
         if (currentChar === currentStr.length) {
           isDeleting = true;
-          setTimeout(typewriter, 1000);
+          setTimeout(typewriter, 900);
           return;
         }
       } else {
@@ -307,7 +277,7 @@
     typewriter();
 
     /*******************************************
-     * BASIC FUNCTIONALITY - WALLET + ANALYSIS
+     * PHANTOM CONNECTION & ANALYSIS
      *******************************************/
     const phantomButton = document.getElementById('phantom-button');
     const submissionContainer = document.getElementById('submission-container');
@@ -320,7 +290,6 @@
     let connected = false;
     let userWalletAddress = null;
 
-    // Phantom detection
     function isPhantomInstalled() {
       const { solana } = window;
       return solana && solana.isPhantom;
@@ -334,57 +303,47 @@
       logArea.scrollTop = logArea.scrollHeight;
     }
 
-    function delay(ms) {
-      return new Promise((res) => setTimeout(res, ms));
-    }
+    function delay(ms) { return new Promise(res => setTimeout(res, ms)); }
 
     // Connect Phantom
     phantomButton.addEventListener('click', async () => {
       if (!isPhantomInstalled()) {
-        alert('Phantom Wallet is not installed. Please install Phantom to use PumpInsights.');
+        alert('Phantom Wallet not detected. Install Phantom to use PumpXploit.');
         window.open('https://phantom.app/', '_blank');
         return;
       }
       try {
-        const response = await window.solana.connect();
+        const resp = await window.solana.connect();
         connected = true;
-        userWalletAddress = response.publicKey.toString();
-        logMessage(`Phantom connected: ${userWalletAddress}`, 'success');
+        userWalletAddress = resp.publicKey.toString();
+        logMessage(`Wallet connected → ${userWalletAddress}`, 'success');
         phantomButton.style.display = 'none';
         submissionContainer.style.display = 'block';
-      } catch (err) {
-        logMessage('Failed to connect Phantom Wallet.', 'error');
+      } catch {
+        logMessage('Connection rejected.', 'error');
       }
     });
 
-    // Analyze button
+    // Analyze
     analyzeBtn.addEventListener('click', async () => {
-      const tokenAddress = tokenAddressInput.value.trim();
+      const tokenAddr = tokenAddressInput.value.trim();
       const userEmail = userEmailInput.value.trim();
 
-      if (!tokenAddress) {
-        logMessage('Please enter a PumpFun token address.', 'warning');
-        return;
-      }
-      if (!userEmail) {
-        logMessage('Please enter an email address to receive the report.', 'warning');
-        return;
-      }
+      if (!tokenAddr) { logMessage('⚠  token address missing', 'warning'); return; }
+      if (!userEmail) { logMessage('⚠  email required', 'warning'); return; }
 
       logArea.innerHTML = '';
       loadingIndicator.style.display = 'block';
+      logMessage(`Recon started for ${tokenAddr}`, 'info');
 
-      logMessage(`Analyzing token: ${tokenAddress}`, 'info');
-
-      // Simulación fake
       await delay(2000);
-      logMessage('Queueing your request…', 'info');
+      logMessage('→ querying mempool', 'info');
       await delay(2000);
-      logMessage('Processing analysis, please stand by…', 'warning');
-      await delay(3000);
+      logMessage('→ crunching chain data…', 'warning');
+      await delay(3500);
 
       loadingIndicator.style.display = 'none';
-      logMessage('Analysis complete! Report will be sent to your email shortly.', 'success');
+      logMessage('✔ report ready — dispatched to email', 'success');
     });
   </script>
 </body>
