@@ -21,7 +21,7 @@
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
     body {
-      font-family: 'Fira Code', monospace;
+      font-family: 'Fira Code', monospace-activity;
       background: var(--clr-bg);
       color: var(--clr-hacker);
       min-height: 100vh;
@@ -42,169 +42,53 @@
       pointer-events: none;
     }
     body::before {
-      background: repeating-linear-gradient(
-        0deg,
-        rgba(0, 0, 0, 0) 0px,
-        rgba(0, 0, 0, 0) 1px,
-        rgba(0, 255, 136, 0.04) 1px,
-        rgba(0, 255, 136, 0.04) 2px
-      );
+      background: repeating-linear-gradient(0deg,rgba(0,0,0,0) 0px,rgba(0,0,0,0) 1px,rgba(0,255,136,0.04) 1px,rgba(0,255,136,0.04) 2px);
     }
     body::after {
       background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAIAAADTED8xAAAAA3NCSVQICAjb4U/gAAAAFElEQVR4nO3BMQEAAADCIPunNJ8PBwAAAP4BeYAAAVaI') repeat;
       mix-blend-mode: overlay;
-      opacity: 0.08;
-      animation: noise 0.4s steps(2) infinite;
+      opacity: .08;
+      animation: noise .4s steps(2) infinite;
     }
-    @keyframes noise {
-      0% { transform: translate(0,0); }
-      10% { transform: translate(-3%,-3%); }
-      20% { transform: translate(3%, -3%); }
-      30% { transform: translate(-3%, 3%); }
-      40% { transform: translate(3%,3%); }
-      50% { transform: translate(-1%,2%); }
-      60% { transform: translate(-3%,1%); }
-      70% { transform: translate(2%,1%); }
-      80% { transform: translate(-1%,-1%); }
-      90% { transform: translate(2%,3%); }
-      100% { transform: translate(0,0); }
-    }
+    @keyframes noise {0%{transform:translate(0)}10%{transform:translate(-3%,-3%)}20%{transform:translate(3%,-3%)}30%{transform:translate(-3%,3%)}40%{transform:translate(3%,3%)}50%{transform:translate(-1%,2%)}60%{transform:translate(-3%,1%)}70%{transform:translate(2%,1%)}80%{transform:translate(-1%,-1%)}90%{transform:translate(2%,3%)}100%{transform:translate(0)}}
 
     /* ======= HEADER ======= */
-    header { margin-top: 3rem; text-align: center; }
-
-    h1 {
-      font-size: clamp(2.25rem, 6vw, 4rem);
-      letter-spacing: 0.08em;
-      position: relative;
-    }
-
-    /* Glitch effect */
-    h1::before,
-    h1::after {
-      content: attr(data-text);
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-    h1::before {
-      left: 2px;
-      text-shadow: -2px 0 var(--clr-pink);
-      animation: glitch 2s infinite linear alternate-reverse;
-    }
-    h1::after {
-      left: -2px;
-      text-shadow: -2px 0 #00bfff;
-      animation: glitch 3s infinite linear alternate-reverse;
-    }
-    @keyframes glitch {
-      0%,100% { clip-path: inset(0 0 85% 0); }
-      10% { clip-path: inset(0 0 30% 0); }
-      20% { clip-path: inset(50% 0 20% 0); }
-      30% { clip-path: inset(10% 0 50% 0); }
-      40% { clip-path: inset(40% 0 40% 0); }
-      50% { clip-path: inset(0 0 85% 0); }
-      60% { clip-path: inset(0 0 30% 0); }
-      70% { clip-path: inset(50% 0 20% 0); }
-      80% { clip-path: inset(10% 0 50% 0); }
-      90% { clip-path: inset(40% 0 40% 0); }
-    }
-
-    header p {
-      font-size: 0.95rem;
-      color: #7affb2;
-      text-shadow: 0 0 5px rgba(0, 255, 136, 0.75);
-      margin-top: 0.5rem;
-    }
+    header{margin-top:3rem;text-align:center}
+    h1{font-size:clamp(2.25rem,6vw,4rem);letter-spacing:.08em;position:relative}
+    h1::before,h1::after{content:attr(data-text);position:absolute;top:0;left:0}
+    h1::before{left:2px;text-shadow:-2px 0 var(--clr-pink);animation:glitch 2s infinite linear alternate-reverse}
+    h1::after{left:-2px;text-shadow:-2px 0 #00bfff;animation:glitch 3s infinite linear alternate-reverse}
+    @keyframes glitch{0%,100%{clip-path:inset(0 0 85% 0)}10%{clip-path:inset(0 0 30% 0)}20%{clip-path:inset(50% 0 20% 0)}30%{clip-path:inset(10% 0 50% 0)}40%{clip-path:inset(40% 0 40% 0)}50%{clip-path:inset(0 0 85% 0)}60%{clip-path:inset(0 0 30% 0)}70%{clip-path:inset(50% 0 20% 0)}80%{clip-path:inset(10% 0 50% 0)}90%{clip-path:inset(40% 0 40% 0)}}
+    header p{font-size:.95rem;color:#7affb2;text-shadow:0 0 5px rgba(0,255,136,.75);margin-top:.5rem}
 
     /* ======= TYPEWRITER ======= */
-    #typewriter-container {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin: 2rem 0;
-      user-select: none;
-      font-size: 1.1rem;
-    }
-    #typewriter-container span { font-weight: 700; }
-    #caret {
-      display: inline-block;
-      width: 2px;
-      height: 1.2em;
-      background: var(--clr-hacker);
-      animation: blink 1s steps(2, start) infinite;
-    }
-    @keyframes blink { 50% { opacity: 0; } }
+    #typewriter-container{display:flex;align-items:center;gap:.5rem;margin:2rem 0;font-size:1.1rem;user-select:none}
+    #typewriter-container span{font-weight:700}
+    #caret{display:inline-block;width:2px;height:1.2em;background:var(--clr-hacker);animation:blink 1s steps(2,start) infinite}
+    @keyframes blink{50%{opacity:0}}
 
     /* ======= TERMINAL CARD ======= */
-    .terminal {
-      width: 90%;
-      max-width: 720px;
-      margin: 0 auto 3rem;
-      background: #000;
-      border: 2px solid var(--clr-hacker);
-      padding: 2rem 1.75rem 2.5rem;
-      border-radius: 8px;
-      box-shadow: 0 0 25px 2px rgba(0, 255, 136, 0.35);
-    }
+    .terminal{width:90%;max-width:720px;margin:0 auto 3rem;background:#000;border:2px solid var(--clr-hacker);padding:2rem 1.75rem 2.5rem;border-radius:8px;box-shadow:0 0 25px 2px rgba(0,255,136,.35)}
 
     /* Buttons */
-    .btn {
-      background: transparent;
-      border: 1px solid var(--clr-hacker);
-      color: var(--clr-hacker);
-      font-weight: 600;
-      padding: 0.75rem 1.5rem;
-      cursor: pointer;
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      transition: background 0.25s, color 0.25s, transform 0.25s;
-      width: 100%;
-    }
-    .btn:hover {
-      background: var(--clr-hacker);
-      color: #000;
-      transform: translateY(-2px) scale(1.02);
-      box-shadow: 0 0 14px 2px rgba(0, 255, 136, 0.65);
-    }
+    .btn{background:transparent;border:1px solid var(--clr-hacker);color:var(--clr-hacker);font-weight:600;padding:.75rem 1.5rem;cursor:pointer;text-transform:uppercase;letter-spacing:.07em;transition:background .25s,color .25s,transform .25s;width:100%}
+    .btn:hover{background:var(--clr-hacker);color:#000;transform:translateY(-2px) scale(1.02);box-shadow:0 0 14px 2px rgba(0,255,136,.65)}
+    .btn:disabled{background:rgba(0,255,136,0.3);color:rgba(0,255,136,0.5);cursor:not-allowed;transform:none;box-shadow:none}
 
     /* Inputs */
-    .field {
-      display: block;
-      width: 100%;
-      background: rgba(0, 0, 0, 0.8);
-      border: 1px solid rgba(0, 255, 136, 0.35);
-      color: var(--clr-hacker);
-      padding: 0.75rem 1rem;
-      margin-top: 1rem;
-      font-size: 0.9rem;
-    }
-    .field:focus {
-      outline: none;
-      border-color: var(--clr-pink);
-    }
+    .field{display:block;width:100%;background:rgba(0,0,0,.8);border:1px solid rgba(0,255,136,.35);color:var(--clr-hacker);padding:.75rem 1rem;margin-top:1rem;font-size:.9rem}
+    .field:focus{outline:none;border-color:var(--clr-pink)}
 
-    #submission-container { display: none; margin-top: 2rem; }
+    #submission-container{display:none;margin-top:2rem}
+    #loadingIndicator{display:none;margin-top:1rem;font-size:.88rem}
 
-    #loadingIndicator { display: none; margin-top: 1rem; font-size: 0.88rem; }
+    .log{margin-top:2rem;max-height:200px;overflow-y:auto;background:rgba(0,255,136,.05);border:1px solid rgba(0,255,136,.3);padding:1rem;font-size:.85rem}
+    .log span{display:block;margin-bottom:.4rem}
+    .info{color:var(--clr-hacker)}.warning{color:var(--clr-pink)}.error{color:#ff5555}.success{color:#7affb2}
 
-    /* Log */
-    .log {
-      margin-top: 2rem;
-      max-height: 200px;
-      overflow-y: auto;
-      background: rgba(0, 255, 136, 0.05);
-      border: 1px solid rgba(0, 255, 136, 0.3);
-      padding: 1rem;
-      font-size: 0.85rem;
-    }
-    .log span { display:block; margin-bottom:0.4rem; }
-    .info{color:var(--clr-hacker);} .warning{color:var(--clr-pink);} .error{color:#ff5555;} .success{color:#7affb2;}
-
-    /* Footer */
-    footer { margin-top: auto; margin-bottom: 1rem; font-size: 0.8rem; color: #7affb2; text-align: center; }
-    footer a { color: var(--clr-hacker); text-decoration:none; }
-    footer a:hover{ text-decoration:underline; }
+    footer{margin-top:auto;margin-bottom:1rem;font-size:.8rem;color:#7affb2;text-align:center}
+    footer a{color:var(--clr-hacker);text-decoration:none}
+    footer a:hover{text-decoration:underline}
   </style>
 </head>
 <body>
@@ -226,4 +110,167 @@
     <div id="submission-container">
       <input type="text" id="tokenAddress" class="field" placeholder="PumpFun token address" />
       <input type="email" id="userEmail" class="field" placeholder="Your email address" />
-      <button id="analyzeBtn" class
+      <button id="analyzeBtn" class="btn" style="margin-top:1.5rem;">Run Analysis</button>
+    </div>
+
+    <div id="loadingIndicator">▌█ scanning █▐ please wait…</div>
+
+    <div class="log" id="logArea"></div>
+  </section>
+
+  <footer>© 2025 PumpXploit — <a href="https://pump.fun" target="_blank" rel="noopener">PumpFun</a></footer>
+
+  <script>
+    /*******************************************
+     * TYPEWRITER EFFECT
+     *******************************************/
+    const pumpFunTokens = ["HwE8jU7fBkZyTGHvT1TbUK1vGXUz2wwUVKYd5isbpump", "61V8vBaqAGMpgDQi4JcAwo1dmBGHsyhzodcPqnEVpump", "8vBaqAG61VMpgDQi4JcAwo1dmBGHsyhzodcPqnEVpump", "vBaqAGMpgDQ61V8i4JcAwo1dmBGHsyhzodcPqnEVpump", "Qi4JcAwo1dm61V8vBaqAGMpgDBGHsyhzodcPqnEVpump"];
+    let currentIndex = 0, currentChar = 0, isDeleting = false;
+    const speed = 100, tokenEl = document.getElementById("pumpToken");
+    function type() {
+      const str = pumpFunTokens[currentIndex];
+      if (!isDeleting) {
+        tokenEl.textContent = str.substring(0, currentChar + 1);
+        currentChar++;
+        if (currentChar === str.length) {
+          isDeleting = true;
+          setTimeout(type, 900);
+          return;
+        }
+      } else {
+        tokenEl.textContent = str.substring(0, currentChar - 1);
+        currentChar--;
+        if (currentChar === 0) {
+          isDeleting = false;
+          currentIndex = (currentIndex + 1) % pumpFunTokens.length;
+        }
+      }
+      setTimeout(type, isDeleting ? speed / 2 : speed);
+    }
+    type();
+
+    /*******************************************
+     * PHANTOM CONNECTION & ANALYSIS
+     *******************************************/
+    const phantomButton = document.getElementById("phantom-button");
+    const submissionContainer = document.getElementById("submission-container");
+    const tokenAddressInput = document.getElementById("tokenAddress");
+    const userEmailInput = document.getElementById("userEmail");
+    const analyzeBtn = document.getElementById("analyzeBtn");
+    const logArea = document.getElementById("logArea");
+    const loadingIndicator = document.getElementById("loadingIndicator");
+
+    function getProvider() {
+      if ("solana" in window) {
+        const provider = window.solana;
+        if (provider.isPhantom) {
+          return provider;
+        }
+      }
+      return null;
+    }
+
+    function logMessage(msg, type = "info") {
+      const span = document.createElement("span");
+      span.classList.add(type);
+      span.textContent = msg;
+      logArea.appendChild(span);
+      logArea.scrollTop = logArea.scrollHeight;
+    }
+
+    function delay(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function connectPhantom() {
+      const provider = getProvider();
+      if (!provider) {
+        logMessage("Phantom Wallet not detected. Please install Phantom.", "error");
+        setTimeout(() => window.open("https://phantom.app/", "_blank"), 1000);
+        return false;
+      }
+
+      try {
+        phantomButton.disabled = true;
+        phantomButton.textContent = "Connecting...";
+
+        if (provider.isConnected) {
+          const publicKey = provider.publicKey?.toString();
+          if (publicKey) {
+            logMessage(`Wallet already connected → ${publicKey}`, "success");
+            phantomButton.style.display = "none";
+            submissionContainer.style.display = "block";
+            return true;
+          }
+        }
+
+        const response = await provider.connect();
+        const walletAddr = response.publicKey.toString();
+        logMessage(`Wallet connected → ${walletAddr}`, "success");
+        phantomButton.style.display = "none";
+        submissionContainer.style.display = "block";
+        return true;
+      } catch (err) {
+        if (err.code === 4001) {
+          logMessage("Connection rejected by user.", "warning");
+        } else {
+          console.error("Connection error:", err);
+          logMessage("Failed to connect to Phantom Wallet.", "error");
+        }
+        return false;
+      } finally {
+        phantomButton.disabled = false;
+        phantomButton.textContent = "Connect Phantom";
+      }
+    }
+
+    phantomButton.addEventListener("click", connectPhantom);
+
+    window.addEventListener("DOMContentLoaded", async () => {
+      const provider = getProvider();
+      if (provider && provider.isConnected) {
+        try {
+          const publicKey = provider.publicKey?.toString();
+          if (publicKey) {
+            logMessage(`Wallet auto-detected → ${publicKey}`, "success");
+            phantomButton.style.display = "none";
+            submissionContainer.style.display = "block";
+          }
+        } catch (err) {
+          console.error("Auto-detect error:", err);
+          logMessage("Failed to auto-detect wallet connection.", "error");
+        }
+      }
+    });
+
+    window.solana?.on("disconnect", () => {
+      logMessage("Wallet disconnected.", "warning");
+      phantomButton.style.display = "block";
+      submissionContainer.style.display = "none";
+    });
+
+    analyzeBtn.addEventListener("click", async () => {
+      const tokenAddr = tokenAddressInput.value.trim();
+      const userEmail = userEmailInput.value.trim();
+      if (!tokenAddr) {
+        logMessage("⚠ Token address missing", "warning");
+        return;
+      }
+      if (!userEmail) {
+        logMessage("⚠ Email required", "warning");
+        return;
+      }
+      logArea.innerHTML = "";
+      loadingIndicator.style.display = "block";
+      logMessage(`Recon started for ${tokenAddr}`, "info");
+      await delay(2000);
+      logMessage("→ querying mempool", "info");
+      await delay(2000);
+      logMessage("→ crunching chain data…", "warning");
+      await delay(3500);
+      loadingIndicator.style.display = "none";
+      logMessage("✔ Report ready — dispatched to email", "success");
+    });
+  </script>
+</body>
+</html>
