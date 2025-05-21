@@ -51,8 +51,7 @@
       );
     }
     body::after {
-      background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAIAAADTED8xAAAAA3NCSVQICAjb4U/gAAAAFElEQVR4nO3BMQEAAADCIPunNJ8PBwAAAP4BeYAAAVaI
-') repeat;
+      background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAIAAADTED8xAAAAA3NCSVQICAjb4U/gAAAAFElEQVR4nO3BMQEAAADCIPunNJ8PBwAAAP4BeYAAAVaI') repeat;
       mix-blend-mode: overlay;
       opacity: 0.08;
       animation: noise 0.4s steps(2) infinite;
@@ -99,7 +98,7 @@
       animation: glitch 3s infinite linear alternate-reverse;
     }
     @keyframes glitch {
-      0% { clip-path: inset(0 0 85% 0); }
+      0%,100% { clip-path: inset(0 0 85% 0); }
       10% { clip-path: inset(0 0 30% 0); }
       20% { clip-path: inset(50% 0 20% 0); }
       30% { clip-path: inset(10% 0 50% 0); }
@@ -109,7 +108,6 @@
       70% { clip-path: inset(50% 0 20% 0); }
       80% { clip-path: inset(10% 0 50% 0); }
       90% { clip-path: inset(40% 0 40% 0); }
-      100% { clip-path: inset(0 0 85% 0); }
     }
 
     header p {
@@ -142,9 +140,10 @@
     .terminal {
       width: 90%;
       max-width: 720px;
+      margin: 0 auto 3rem;
       background: #000;
       border: 2px solid var(--clr-hacker);
-      padding: 2rem 1.5rem 2.5rem;
+      padding: 2rem 1.75rem 2.5rem;
       border-radius: 8px;
       box-shadow: 0 0 25px 2px rgba(0, 255, 136, 0.35);
     }
@@ -160,6 +159,7 @@
       text-transform: uppercase;
       letter-spacing: 0.07em;
       transition: background 0.25s, color 0.25s, transform 0.25s;
+      width: 100%;
     }
     .btn:hover {
       background: var(--clr-hacker);
@@ -170,6 +170,7 @@
 
     /* Inputs */
     .field {
+      display: block;
       width: 100%;
       background: rgba(0, 0, 0, 0.8);
       border: 1px solid rgba(0, 255, 136, 0.35);
@@ -225,126 +226,4 @@
     <div id="submission-container">
       <input type="text" id="tokenAddress" class="field" placeholder="PumpFun token address" />
       <input type="email" id="userEmail" class="field" placeholder="Your email address" />
-      <button id="analyzeBtn" class="btn" style="width:100%;margin-top:1.5rem;">Run Analysis</button>
-    </div>
-
-    <div id="loadingIndicator">▌█ scanning █▐ please wait…</div>
-
-    <div class="log" id="logArea"></div>
-  </section>
-
-  <!-- ======= FOOTER ======= -->
-  <footer>© 2025 PumpXploit – <a href="https://pump.fun" target="_blank" rel="noopener">PumpFun</a></footer>
-
-  <script>
-    /*******************************************
-     * TYPEWRITER EFFECT - PUMPFUN TOKENS
-     *******************************************/
-    const pumpFunTokens = [
-      'HwE8jU7fBkZyTGHvT1TbUK1vGXUz2wwUVKYd5isbpump',
-      '61V8vBaqAGMpgDQi4JcAwo1dmBGHsyhzodcPqnEVpump',
-      '8vBaqAG61VMpgDQi4JcAwo1dmBGHsyhzodcPqnEVpump',
-      'vBaqAGMpgDQ61V8i4JcAwo1dmBGHsyhzodcPqnEVpump',
-      'Qi4JcAwo1dm61V8vBaqAGMpgDBGHsyhzodcPqnEVpump'
-    ];
-
-    let currentIndex = 0;
-    let currentChar = 0;
-    let isDeleting = false;
-    const speed = 100;
-    const pumpTokenElement = document.getElementById('pumpToken');
-
-    function typewriter() {
-      const currentStr = pumpFunTokens[currentIndex];
-      if (!isDeleting) {
-        pumpTokenElement.textContent = currentStr.substring(0, currentChar + 1);
-        currentChar++;
-        if (currentChar === currentStr.length) {
-          isDeleting = true;
-          setTimeout(typewriter, 900);
-          return;
-        }
-      } else {
-        pumpTokenElement.textContent = currentStr.substring(0, currentChar - 1);
-        currentChar--;
-        if (currentChar === 0) {
-          isDeleting = false;
-          currentIndex = (currentIndex + 1) % pumpFunTokens.length;
-        }
-      }
-      setTimeout(typewriter, isDeleting ? speed / 2 : speed);
-    }
-    typewriter();
-
-    /*******************************************
-     * PHANTOM CONNECTION & ANALYSIS
-     *******************************************/
-    const phantomButton = document.getElementById('phantom-button');
-    const submissionContainer = document.getElementById('submission-container');
-    const tokenAddressInput = document.getElementById('tokenAddress');
-    const userEmailInput = document.getElementById('userEmail');
-    const analyzeBtn = document.getElementById('analyzeBtn');
-    const logArea = document.getElementById('logArea');
-    const loadingIndicator = document.getElementById('loadingIndicator');
-
-    let connected = false;
-    let userWalletAddress = null;
-
-    function isPhantomInstalled() {
-      const { solana } = window;
-      return solana && solana.isPhantom;
-    }
-
-    function logMessage(msg, type = 'info') {
-      const span = document.createElement('span');
-      span.classList.add(type);
-      span.innerText = msg;
-      logArea.appendChild(span);
-      logArea.scrollTop = logArea.scrollHeight;
-    }
-
-    function delay(ms) { return new Promise(res => setTimeout(res, ms)); }
-
-    // Connect Phantom
-    phantomButton.addEventListener('click', async () => {
-      if (!isPhantomInstalled()) {
-        alert('Phantom Wallet not detected. Install Phantom to use PumpXploit.');
-        window.open('https://phantom.app/', '_blank');
-        return;
-      }
-      try {
-        const resp = await window.solana.connect();
-        connected = true;
-        userWalletAddress = resp.publicKey.toString();
-        logMessage(`Wallet connected → ${userWalletAddress}`, 'success');
-        phantomButton.style.display = 'none';
-        submissionContainer.style.display = 'block';
-      } catch {
-        logMessage('Connection rejected.', 'error');
-      }
-    });
-
-    // Analyze
-    analyzeBtn.addEventListener('click', async () => {
-      const tokenAddr = tokenAddressInput.value.trim();
-      const userEmail = userEmailInput.value.trim();
-
-      if (!tokenAddr) { logMessage('⚠  token address missing', 'warning'); return; }
-      if (!userEmail) { logMessage('⚠  email required', 'warning'); return; }
-
-      logArea.innerHTML = '';
-      loadingIndicator.style.display = 'block';
-      logMessage(`Recon started for ${tokenAddr}`, 'info');
-
-      await delay(2000);
-      logMessage('→ querying mempool', 'info');
-      await delay(2000);
-      logMessage('→ crunching chain data…', 'warning');
-      await delay(3500);
-
-      loadingIndicator.style.display = 'none';
-      logMessage('✔ report ready — dispatched to email', 'success');
-    });
-  </script>
-</body>
-</html>
+      <button id="analyzeBtn" class
